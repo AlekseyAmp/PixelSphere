@@ -1,13 +1,13 @@
 import os
 from dotenv import load_dotenv
 
-from pydantic_settings import BaseSettings
+from pydantic import BaseModel
 
 
 load_dotenv()
 
 
-class Settings(BaseSettings):
+class Settings(BaseModel):
     POSTGRESQL_HOST: str = os.environ["POSTGRESQL_HOST"]
     POSTGRESQL_USER: str = os.environ["POSTGRESQL_USER"]
     POSTGRESQL_PASSWORD: str = os.environ["POSTGRESQL_PASSWORD"]

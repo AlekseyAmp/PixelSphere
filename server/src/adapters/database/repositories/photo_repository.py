@@ -3,11 +3,12 @@ from typing import Sequence
 
 from sqlalchemy import Select, Row, Insert, func, select, insert
 
-from .base_repository import SABaseRepository
+from adapters.database.repositories.base_repository import SABaseRepository
 from adapters.database.models.user import User
 from adapters.database.models.photo import Photo
 from adapters.database.models.comment import Comment
 from adapters.database.models.like import Like
+
 from application.photo.entities import PhotoDTO, CommentDTO
 from application.photo.interfaces import (
     IPhotoRepository,
@@ -37,7 +38,7 @@ class PhotoRepository(SABaseRepository, IPhotoRepository):
         self.session.commit()
         return photo
 
-    async def get_photo_by_id(self, photo_id: int)-> Row | None:
+    async def get_photo_by_id(self, photo_id: int) -> Row | None:
         query: Select = (
             select(
                 Photo.title,

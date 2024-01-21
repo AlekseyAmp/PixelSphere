@@ -7,6 +7,7 @@ from adapters.database.repositories.photo_repository import (
     PhotoCommentRepository,
     PhotoLikeRepository
 )
+
 from application.photo.services import PhotoService
 from application.photo.exceptions import PhotoNotFound
 

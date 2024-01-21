@@ -1,13 +1,14 @@
-from fastapi import APIRouter, Depends, File, Form, UploadFile
+from fastapi import APIRouter, Depends, File, UploadFile
 
-from .dependencies import get_photo_service, check_exsist_photo
-from .schemas import (
+from adapters.api.photo.dependencies import get_photo_service, check_exsist_photo
+from adapters.api.photo.schemas import (
     AddCommentResponse,
     AddLikeResponse,
     CommentResponse,
     UploadPhotoResponse,
     PhotoResponse
 )
+
 from application.photo.services import PhotoService
 from application.photo.entities import PhotoDTO, CommentDTO
 
