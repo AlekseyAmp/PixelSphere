@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "pixelsphere"
+version = "0.1.0"
+description = ""
+authors = ["tracebn"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.109.0"
+pydantic = "^2.5.3"
+uvicorn = "^0.26.0"
+alembic = "^1.13.1"
+python-dotenv = "^1.0.0"
+psycopg2-binary = "^2.9.9"
+pydantic-settings = "^2.1.0"
+python-multipart = "^0.0.6"
+pytz = "^2023.3.post1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
