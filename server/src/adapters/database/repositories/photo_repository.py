@@ -98,7 +98,7 @@ class PhotoCommentRepository(SABaseRepository, IPhotoCommentRepository):
         return comment
 
     async def get_comments_for_photo(self, photo_id: int) -> list[tuple]:
-        query = (
+        query: Select = (
             select(
                 Comment.id,
                 Comment.text,
@@ -137,7 +137,7 @@ class PhotoLikeRepository(SABaseRepository, IPhotoLikeRepository):
         return like
 
     async def get_likes_for_photo(self, photo_id: int) -> int:
-        query = (
+        query: Select = (
             select(
                 func.sum(1).label("total_likes")
             )

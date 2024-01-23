@@ -3,11 +3,12 @@ from abc import ABC, abstractmethod
 from adapters.database.models.user import User
 
 from application.user.entities import UserDTO
+from application.auth.entities import AuthUserDTO
 
 
 class IUserRepository(ABC):
     @abstractmethod
-    async def create_user(self, user: UserDTO) -> User:
+    async def create_user(self, user: AuthUserDTO) -> User:
         pass
 
     @abstractmethod
