@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class UserExists(HTTPException):
+class UserExistsException(HTTPException):
     username: str
 
     def __post_init__(self) -> None:
@@ -12,7 +12,7 @@ class UserExists(HTTPException):
 
 
 @dataclass
-class UserNotFound(HTTPException):
+class UserNotFoundException(HTTPException):
     username: str
 
     def __post_init__(self) -> None:

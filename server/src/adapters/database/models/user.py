@@ -10,6 +10,7 @@ from adapters.database.settings import settings
 
 class User(Base):
     __tablename__ = "users"
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, autoincrement=True, primary_key=True)
     username = Column(String, unique=True, index=True)

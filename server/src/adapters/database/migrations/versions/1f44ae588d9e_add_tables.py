@@ -1,8 +1,8 @@
-"""Create tables
+"""add tables
 
-Revision ID: 092d61ce119c
+Revision ID: 1f44ae588d9e
 Revises: 
-Create Date: 2024-01-21 23:02:28.630367
+Create Date: 2024-01-24 20:00:22.171567
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '092d61ce119c'
+revision: str = '1f44ae588d9e'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -45,7 +45,7 @@ def upgrade() -> None:
     sa.Column('created_at', sa.DateTime(timezone=True), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('photo_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['photo_id'], ['photos.id'], ),
+    sa.ForeignKeyConstraint(['photo_id'], ['photos.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -55,7 +55,7 @@ def upgrade() -> None:
     sa.Column('created_at', sa.DateTime(timezone=True), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('photo_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['photo_id'], ['photos.id'], ),
+    sa.ForeignKeyConstraint(['photo_id'], ['photos.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

@@ -1,6 +1,10 @@
+import tempfile
+
 from fastapi import APIRouter, Depends, File, UploadFile
+from fastapi.responses import FileResponse
 
 from adapters.api.photo.dependencies import get_photo_service, check_exsist_photo
+from adapters.api.user.dependencies import get_user_id
 from adapters.api.photo.schemas import (
     AddCommentResponse,
     AddLikeResponse,
@@ -24,7 +28,8 @@ async def upload_photo(
     title: str,
     description: str,
     file: UploadFile = File(...),
-    photo_service: PhotoService = Depends(get_photo_service),
+    user_id: int = Depends(get_user_id),
+    photo_service: PhotoService = Depends(get_photo_service)
 ) -> UploadPhotoResponse:
     contents = await file.read()
     photo = PhotoDTO(
@@ -32,8 +37,7 @@ async def upload_photo(
         description=description,
         image=contents
     )
-    return await photo_service.upload_photo(photo)
-
+    return await photo_service.upload_photo(photo, user_id)
 
 @router.get(
     path="/get_photo/{photo_id}",
@@ -45,16 +49,39 @@ async def get_photo_by_id(
 ) -> PhotoResponse:
     return await photo_service.get_photo_by_id(photo_id)
 
-
 @router.get(
     path="/get_all_photos",
-    response_model=dict[str, list[PhotoResponse]],
+    response_model=list[PhotoResponse],
 )
 async def get_all_photos(
     photo_service: PhotoService = Depends(get_photo_service)
-) -> dict[str, list[PhotoResponse]]:
+) -> list[PhotoResponse]:
     return await photo_service.get_all_photos()
 
+@router.get(
+    path="/download_photo/{photo_id}",
+)
+async def download_photo(
+    photo_id: int = Depends(check_exsist_photo),
+    photo_service: PhotoService = Depends(get_photo_service)
+) -> FileResponse:
+    binary_data = await photo_service.download_photo(photo_id)
+
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        temp_file.write(binary_data)
+    
+    return FileResponse(temp_file.name, filename=f"{temp_file.name}.jpg")
+
+@router.delete(
+    path="/delete_photo/{photo_id}",
+    response_model=dict[str, str],
+)
+async def delete_photo(
+    photo_id: int = Depends(check_exsist_photo),
+    user_id: int = Depends(get_user_id),
+    photo_service: PhotoService = Depends(get_photo_service)
+) -> dict[str, str]:
+    return await photo_service.delete_photo(photo_id, user_id)
 
 @router.post(
     path="/add_comment_to_photo",
@@ -62,33 +89,32 @@ async def get_all_photos(
 )
 async def add_comment_to_photo(
     comment: CommentDTO,
-    photo_service: PhotoService = Depends(get_photo_service),
     photo_id: int = Depends(check_exsist_photo),
+    user_id: int = Depends(get_user_id),
+    photo_service: PhotoService = Depends(get_photo_service)
 ) -> AddCommentResponse:
-    return await photo_service.add_comment_to_photo(photo_id, comment)
-
+    return await photo_service.add_comment_to_photo(photo_id, comment, user_id)
 
 @router.get(
     path="/get_comments_for_photo/{photo_id}",
-    response_model=dict[str, list[CommentResponse]],
+    response_model=list[CommentResponse],
 )
 async def get_comments_for_photo(
     photo_id: int = Depends(check_exsist_photo),
     photo_service: PhotoService = Depends(get_photo_service)
-) -> dict[str, list[CommentResponse]]:
+) -> list[CommentResponse]:
     return await photo_service.get_comments_for_photo(photo_id)
-
 
 @router.post(
     path="/add_like_to_photo",
     response_model=AddLikeResponse,
 )
 async def add_like_to_photo(
-    photo_service: PhotoService = Depends(get_photo_service),
     photo_id: int = Depends(check_exsist_photo),
+    user_id: int = Depends(get_user_id),
+    photo_service: PhotoService = Depends(get_photo_service)
 ) -> AddLikeResponse:
-    return await photo_service.add_like_to_photo(photo_id)
-
+    return await photo_service.add_like_to_photo(photo_id, user_id)
 
 @router.get(
     path="/get_likes_for_photo/{photo_id}",

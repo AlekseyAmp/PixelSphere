@@ -7,11 +7,12 @@ from adapters.database.models.user import User
 
 from application.auth.entities import AuthUserDTO
 from application.user.interfaces import IUserRepository
-from application.auth.heleprs import hash_password
+from application.helpers import hash_password
 
 
 @dataclass
 class UserRepository(SABaseRepository, IUserRepository):
+
     async def create_user(self, user: AuthUserDTO) -> User:
         query: Insert = (
             insert(

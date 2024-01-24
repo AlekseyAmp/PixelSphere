@@ -4,6 +4,7 @@ from adapters.api.auth.dependencies import (
     get_auth_service,
     check_user_authenticated,
 )
+from adapters.api.user.dependencies import get_user_id
 from adapters.api.auth.schemas import (
     RegisterResponse,
     LoginResponse,
@@ -26,14 +27,13 @@ async def register_user(
     user: AuthUserDTO,
     response: Response,
     authorize: AuthJWT = Depends(),
-    auth_service: AuthService = Depends(get_auth_service),
+    auth_service: AuthService = Depends(get_auth_service)
 ) -> RegisterResponse:
     return await auth_service.register_user(
         user,
         response,
         authorize
     )
-
 
 @router.post(
     path="/login_user",
@@ -44,7 +44,7 @@ async def login_user(
     user: AuthUserDTO,
     response: Response,
     authorize: AuthJWT = Depends(),
-    auth_service: AuthService = Depends(get_auth_service),
+    auth_service: AuthService = Depends(get_auth_service)
 ) -> LoginResponse:
     return await auth_service.login_user(
         user,
@@ -52,30 +52,30 @@ async def login_user(
         authorize
     )
 
-
 @router.post(
     path="/refresh_token",
+    response_model=dict[str, str],
 )
 async def refresh_token(
-    user_id: int,
     response: Response,
     authorize: AuthJWT = Depends(),
-    auth_service: AuthService = Depends(get_auth_service),
+    user_id: int = Depends(get_user_id),
+    auth_service: AuthService = Depends(get_auth_service)
 ) -> dict[str, str]:
     return await auth_service.refresh_token(
-        user_id,
         response,
-        authorize
+        authorize,
+        user_id
     )
-
 
 @router.post(
     path="/logout_user",
+    response_model=dict[str, str],
 )
 async def logout_user(
     response: Response,
     authorize: AuthJWT = Depends(),
-    auth_service: AuthService = Depends(get_auth_service),
+    auth_service: AuthService = Depends(get_auth_service)
 ) -> dict[str, str]:
     return await auth_service.logout_user(
         response,

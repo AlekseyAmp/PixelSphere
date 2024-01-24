@@ -9,7 +9,7 @@ from adapters.database.repositories.photo_repository import (
 )
 
 from application.photo.services import PhotoService
-from application.photo.exceptions import PhotoNotFound
+from application.photo.exceptions import PhotoNotFoundException
 
 
 def get_photo_repo(session: Session = Depends(get_session)) -> PhotoRepository:
@@ -39,7 +39,6 @@ async def check_exsist_photo(
     photo = await photo_repo.get_photo_by_id(photo_id)
 
     if not photo:
-        raise PhotoNotFound(photo_id)
+        raise PhotoNotFoundException(photo_id)
     
     return photo_id
-

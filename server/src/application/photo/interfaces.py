@@ -11,8 +11,9 @@ from application.photo.entities import PhotoDTO, CommentDTO
 
 
 class IPhotoRepository(ABC):
+
     @abstractmethod
-    async def upload_photo(self, photo: PhotoDTO, user_id: str) -> Photo:
+    async def upload_photo(self, photo: PhotoDTO, user_id: int) -> Photo:
         pass
 
     @abstractmethod
@@ -23,10 +24,15 @@ class IPhotoRepository(ABC):
     async def get_all_photos(self) -> Sequence[Row]:
         pass
 
+    @abstractmethod
+    async def delete_photo(self, photo_id: int, user_id: int) -> int:
+        pass
+
 
 class IPhotoCommentRepository(ABC):
+
     @abstractmethod
-    async def add_comment_to_photo(self, photo_id: int, comment: CommentDTO, user_id: str) -> Comment:
+    async def add_comment_to_photo(self, photo_id: int, comment: CommentDTO, user_id: int) -> Comment:
         pass
 
     @abstractmethod
@@ -35,10 +41,15 @@ class IPhotoCommentRepository(ABC):
 
 
 class IPhotoLikeRepository(ABC):
+
     @abstractmethod
-    async def add_like_to_photo(self, photo_id: int, user_id: str) -> Like:
+    async def add_like_to_photo(self, photo_id: int, user_id: int) -> Like:
         pass
 
     @abstractmethod
     async def get_likes_for_photo(self, photo_id: int) -> int:
+        pass
+
+    @abstractmethod
+    async def get_like_by_user_and_photo_id(self, photo_id: int, user_id: int) -> Like:
         pass

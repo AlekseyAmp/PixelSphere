@@ -3,16 +3,13 @@ from dataclasses import dataclass
 
 from fastapi import Response, HTTPException
 
-from adapters.api.auth.schemas import (
-    RegisterResponse,
-    LoginResponse,
-)
+from adapters.api.auth.schemas import RegisterResponse, LoginResponse
 from adapters.api.settings import settings, AuthJWT
 
 from application.auth.entities import AuthUserDTO
-from application.auth.exceptions import UserExists, UserNotFound
+from application.auth.exceptions import UserExistsException, UserNotFoundException
 from application.user.interfaces import IUserRepository
-from application.auth.heleprs import verify_password
+from application.helpers import verify_password, validate_non_empty_fields
 
 
 class TokenService:
@@ -50,7 +47,6 @@ class TokenService:
 @dataclass
 class AuthService:
     user_repo: IUserRepository
-    token_service: TokenService = TokenService()
 
     async def register_user(
         self,
@@ -58,20 +54,22 @@ class AuthService:
         response: Response,
         authorize: AuthJWT
     ) -> RegisterResponse:
+        validate_non_empty_fields(dict(user))
+
         user_exsist = await self.user_repo.get_user_by_username(
             user.username
         )
 
         if user_exsist:
-            raise UserExists(user.username)
+            raise UserExistsException(user.username)
 
         user_data = await self.user_repo.create_user(user)
         if user_data:
-            access_token = self.token_service.create_access_token(
+            access_token = TokenService().create_access_token(
                 authorize,
                 str(user_data.id)
             )
-            refresh_token = self.token_service.create_refresh_token(
+            refresh_token = TokenService().create_refresh_token(
                 authorize,
                 str(user_data.id)
             )
@@ -114,12 +112,14 @@ class AuthService:
         response: Response,
         authorize: AuthJWT
     ) -> LoginResponse:
+        validate_non_empty_fields(dict(user))
+
         user_data = await self.user_repo.get_user_by_username(
             user.username
         )
 
         if not user_data:
-            raise UserNotFound(user.username)
+            raise UserNotFoundException(user.username)
 
         if not verify_password(user.password, user_data.password):
             raise HTTPException(
@@ -127,11 +127,11 @@ class AuthService:
                 detail="Wrong username or password"
             )
 
-        access_token = self.token_service.create_access_token(
+        access_token = TokenService().create_access_token(
             authorize,
             str(user_data.id)
         )
-        refresh_token = self.token_service.create_refresh_token(
+        refresh_token = TokenService().create_refresh_token(
             authorize,
             str(user_data.id)
         )
@@ -169,11 +169,11 @@ class AuthService:
 
     async def refresh_token(
         self,
-        user_id: int,
         response: Response,
         authorize: AuthJWT,
+        user_id: int
     ) -> dict[str, str]:
-        access_token = self.token_service.create_access_token(
+        access_token = TokenService().create_access_token(
             authorize,
             str(user_id)
         )

@@ -1,11 +1,10 @@
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
 from adapters.database.sa_session import get_session
 from adapters.database.repositories.user_repository import (
     UserRepository
 )
-from adapters.api.settings import AuthJWT
 
 from application.auth.services import AuthService
 
@@ -20,13 +19,16 @@ def get_auth_service(
         user_repo
     )
 
-def check_user_authenticated(authorize: AuthJWT = Depends()):
+def check_user_authenticated(request: Request)-> bool:
     credentials_exception = HTTPException(
         status_code=401,
-        detail="You is already authenticated",
+        detail="You are already authenticated",
     )
-    authorize.jwt_required()
-    user_id = authorize.get_jwt_subject()
-    if user_id:
+
+    access_token = request.cookies.get("access_token")
+    refresh_token = request.cookies.get("refresh_token")
+
+    if access_token or refresh_token:
         raise credentials_exception
+
     return True

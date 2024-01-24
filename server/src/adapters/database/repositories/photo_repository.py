@@ -1,7 +1,16 @@
 from dataclasses import dataclass
 from typing import Sequence
 
-from sqlalchemy import Select, Row, Insert, func, select, insert
+from sqlalchemy import (
+    Select,
+    Insert,
+    Delete,
+    Row,
+    func,
+    select,
+    insert,
+    delete,
+)
 
 from adapters.database.repositories.base_repository import SABaseRepository
 from adapters.database.models.user import User
@@ -13,12 +22,13 @@ from application.photo.entities import PhotoDTO, CommentDTO
 from application.photo.interfaces import (
     IPhotoRepository,
     IPhotoCommentRepository,
-    IPhotoLikeRepository
+    IPhotoLikeRepository,
 )
 
 
 @dataclass
 class PhotoRepository(SABaseRepository, IPhotoRepository):
+
     async def upload_photo(self, photo: PhotoDTO, user_id: int) -> Photo:
         query: Insert = (
             insert(
@@ -76,9 +86,20 @@ class PhotoRepository(SABaseRepository, IPhotoRepository):
         photos = self.session.execute(query).fetchall()
         return photos
 
+    async def delete_photo(self, photo_id: int, user_id: int) -> int:
+        query: Delete = delete(Photo).filter(
+            Photo.id == photo_id,
+            Photo.user_id == user_id
+        )
+
+        result = self.session.execute(query)
+        self.session.commit()
+        return result.rowcount
+
 
 @dataclass
 class PhotoCommentRepository(SABaseRepository, IPhotoCommentRepository):
+
     async def add_comment_to_photo(self, photo_id: int, comment: CommentDTO, user_id: int) -> Comment:
         query: Insert = (
             insert(
@@ -119,6 +140,7 @@ class PhotoCommentRepository(SABaseRepository, IPhotoCommentRepository):
 
 @dataclass
 class PhotoLikeRepository(SABaseRepository, IPhotoLikeRepository):
+
     async def add_like_to_photo(self, photo_id: int, user_id: int) -> Like:
         query: Insert = (
             insert(
@@ -147,3 +169,15 @@ class PhotoLikeRepository(SABaseRepository, IPhotoLikeRepository):
         )
         total_likes = self.session.execute(query).scalar_one()
         return total_likes if total_likes is not None else 0
+
+    async def get_like_by_user_and_photo_id(self, photo_id: int, user_id: int) -> Like:
+        query: Select = (
+            select(
+                Like
+            ).filter_by(
+                user_id=user_id,
+                photo_id=photo_id
+            )
+        )
+        like = self.session.execute(query).fetchone()
+        return like
