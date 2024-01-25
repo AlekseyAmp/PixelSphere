@@ -22,3 +22,4 @@ archive.zip
 # vim temporary files
 *~
 .*.sw?
+alembic.ini
