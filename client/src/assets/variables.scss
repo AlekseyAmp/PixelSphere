@@ -1,0 +1,87 @@
+$body_background: #f8f8f8;
+$white: #f7f7f7;
+$blue: #458DFD;
+$green: #15966E;
+$light_green: #1ede5182;
+$lettuce: rgb(55 242 48 / 30%);
+$light_blue: RGB(212, 234, 255);
+$light_orange: RGB(253, 229, 166);
+$bold_orange: #d88322;
+$red: #ce332ae6;
+$dark_red: #940c05e8;
+$dark: rgba(34, 32, 32, 0.97);
+$light_dark: rgba(58, 54, 54, 0.89);
+$gray: rgb(216, 214, 214);
+$light_gray: #f3f3f7;
+
+
+.dark-text {
+    text-decoration: none;
+    font-family: 'Ubuntu';
+    font-size: 17px;
+    font-weight: 500;
+    color: $dark;
+}
+
+.white-text {
+    text-decoration: none;
+    font-family: 'Ubuntu';
+    font-size: 17px;
+    font-weight: 500;
+    color: $white;
+}
+
+.gray-text {
+    text-decoration: none;
+    font-family: 'Ubuntu';
+    font-size: 17px;
+    font-weight: 500;
+    color: $light_dark;
+}
+
+.link-text {
+    text-decoration: none;
+    font-family: 'Ubuntu';
+    font-size: 16px;
+    font-weight: 500;
+    color: $light_dark;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.link-text:hover {
+    color: $bold_orange;
+}
+
+.small-text {
+    text-decoration: none;
+    font-family: 'Ubuntu';
+    font-size: 15px;
+    font-weight: 500;
+    color: $light_dark;
+    transition: 0.2s;
+}
+
+.bold-text {
+    font-family: 'Ubuntu';
+    font-size: 16px;
+    font-weight: bold;
+    color: $dark;
+    text-decoration: none;
+}
+
+.bold-text-white {
+    font-family: 'Ubuntu';
+    font-size: 16px;
+    font-weight: bold;
+    color: $white;
+    text-decoration: none;
+}
+
+.title {
+    font-family: 'Ubuntu';
+    font-size: 19px;
+    font-weight: bold;
+    color: $dark;
+    text-decoration: none;
+}

@@ -1,0 +1,49 @@
+@import '../../../assets/variables.scss';
+
+.photoContainer {
+    width: 250px;
+    height: 380px;
+    margin: 5px;
+    overflow: hidden;
+    position: relative;
+
+    img {
+      width: 250px;
+      height: 330px;
+      border-radius: 10px;
+      transition: filter 0.3s ease-in-out;
+    }
+  
+    &:hover img {
+      filter: brightness(70%);
+    }
+  
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 330px;
+      border-radius: 10px;
+      background: $light_dark;
+      color: $white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+  
+    &:hover .overlay {
+      opacity: 1;
+    }
+  
+    &Info {
+      display: flex;
+      align-items: center;
+      margin-top: 5px;
+      gap: 10px;
+    }
+  }
+  

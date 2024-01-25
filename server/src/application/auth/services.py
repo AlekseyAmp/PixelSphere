@@ -3,13 +3,13 @@ from dataclasses import dataclass
 
 from fastapi import Response, HTTPException
 
-from adapters.api.auth.schemas import RegisterResponse, LoginResponse
-from adapters.api.settings import settings, AuthJWT
+from src.adapters.api.auth.schemas import RegisterResponse, LoginResponse
+from src.adapters.api.settings import settings, AuthJWT
 
-from application.auth.entities import AuthUserDTO
-from application.auth.exceptions import UserExistsException, UserNotFoundException
-from application.user.interfaces import IUserRepository
-from application.helpers import verify_password, validate_non_empty_fields
+from src.application.auth.entities import AuthUserDTO
+from src.application.exceptions import UserExistsException, UserNotFoundException
+from src.application.user.interfaces import IUserRepository
+from src.application.helpers import verify_password, validate_non_empty_fields
 
 
 class TokenService:
@@ -119,7 +119,7 @@ class AuthService:
         )
 
         if not user_data:
-            raise UserNotFoundException(user.username)
+            raise UserNotFoundException()
 
         if not verify_password(user.password, user_data.password):
             raise HTTPException(

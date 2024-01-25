@@ -3,9 +3,9 @@ import tempfile
 from fastapi import APIRouter, Depends, File, UploadFile
 from fastapi.responses import FileResponse
 
-from adapters.api.photo.dependencies import get_photo_service, check_exsist_photo
-from adapters.api.user.dependencies import get_user_id
-from adapters.api.photo.schemas import (
+from src.adapters.api.photo.dependencies import get_photo_service, check_exsist_photo
+from src.adapters.api.user.dependencies import get_user_id
+from src.adapters.api.photo.schemas import (
     AddCommentResponse,
     AddLikeResponse,
     CommentResponse,
@@ -13,8 +13,8 @@ from adapters.api.photo.schemas import (
     PhotoResponse
 )
 
-from application.photo.services import PhotoService
-from application.photo.entities import PhotoDTO, CommentDTO
+from src.application.photo.services import PhotoService
+from src.application.photo.entities import PhotoDTO, CommentDTO
 
 
 router = APIRouter()
@@ -57,6 +57,26 @@ async def get_all_photos(
     photo_service: PhotoService = Depends(get_photo_service)
 ) -> list[PhotoResponse]:
     return await photo_service.get_all_photos()
+
+@router.get(
+    path="/get_my_photos",
+    response_model=list[PhotoResponse],
+)
+async def get_my_photos(
+    user_id: int = Depends(get_user_id),
+    photo_service: PhotoService = Depends(get_photo_service)
+) -> list[PhotoResponse]:
+    return await photo_service.get_my_photos(user_id)
+
+@router.get(
+    path="/search_photos",
+    response_model=list[PhotoResponse],
+)
+async def search_photos(
+    search_term: str,
+    photo_service: PhotoService = Depends(get_photo_service)
+) -> list[PhotoResponse]:
+    return await photo_service.search_photos(search_term)
 
 @router.get(
     path="/download_photo/{photo_id}",

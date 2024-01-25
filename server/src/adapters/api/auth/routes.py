@@ -1,18 +1,18 @@
 from fastapi import APIRouter, Depends, Response
 
-from adapters.api.auth.dependencies import (
+from src.adapters.api.auth.dependencies import (
     get_auth_service,
     check_user_authenticated,
 )
-from adapters.api.user.dependencies import get_user_id
-from adapters.api.auth.schemas import (
+from src.adapters.api.user.dependencies import get_user_id
+from src.adapters.api.auth.schemas import (
     RegisterResponse,
     LoginResponse,
 )
-from adapters.api.settings import AuthJWT
+from src.adapters.api.settings import AuthJWT
 
-from application.auth.services import AuthService
-from application.auth.entities import AuthUserDTO
+from src.application.auth.services import AuthService
+from src.application.auth.entities import AuthUserDTO
 
 
 router = APIRouter()

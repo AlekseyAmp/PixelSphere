@@ -1,15 +1,15 @@
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from adapters.database.sa_session import get_session
-from adapters.database.repositories.photo_repository import (
+from src.adapters.database.sa_session import get_session
+from src.adapters.database.repositories.photo_repository import (
     PhotoRepository,
     PhotoCommentRepository,
     PhotoLikeRepository
 )
 
-from application.photo.services import PhotoService
-from application.photo.exceptions import PhotoNotFoundException
+from src.application.photo.services import PhotoService
+from src.application.exceptions import PhotoNotFoundException
 
 
 def get_photo_repo(session: Session = Depends(get_session)) -> PhotoRepository:

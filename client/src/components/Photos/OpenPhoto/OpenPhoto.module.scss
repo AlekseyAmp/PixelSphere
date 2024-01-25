@@ -1,0 +1,143 @@
+@import '../../../assets/variables.scss';
+
+.overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1050px;
+    height: 800px;
+    background-color: $white;
+    display: flex;
+
+    img {
+        width: 600px;
+        height: 800px;
+        border-radius: 10px;
+    }
+
+    .photoContainer {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .photoInfo {
+        margin-top: 20px;
+        padding: 70px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+
+        .title {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .description {
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .likes {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            img {
+                cursor: pointer;
+                width: 28px;
+                height: 30px;
+            }
+        }
+
+        .commentsTitle {
+            margin-top: 30px;
+            img {
+                // color: $bold_orange;
+                width: 22px;
+                height: 20px;
+            }
+            align-items: center;
+            display: flex;
+            gap: 5px;
+        }
+
+        .comments {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow: auto;
+            width: 300px;
+            height: 300px;
+
+            .comment {
+                background-color: $gray;
+                padding: 20px;
+                border-radius: 10px;
+                margin-top: 20px;
+            }
+        }
+    }
+
+    .commentInput {
+        // margin-top: 16px;
+
+        button {
+            margin-top: 16px;
+        }
+    }
+
+    .optionsMenu {
+        align-self: flex-start;
+        position: relative; // Set position relative on the parent
+        padding: 15px;
+        margin-left: -190px;
+        display: flex;
+        border: none;
+        gap: 25px;
+        border-radius: 10px;
+        align-items: center;
+        
+        .optionsButton {
+          cursor: pointer;
+          outline: none;
+          border: none;
+          background: transparent;
+          margin-top: 5px;
+          img {
+            width: 20px;
+            height: 20px;
+          }
+        }
+      
+        .optionsDropdown {
+          font-family: 'Ubuntu';
+          position: absolute;
+          top: 100%;
+          left: -30%;
+          cursor: pointer;
+          display: flex;
+          flex-direction: column;
+          background: $light_gray;
+          padding: 5px;
+          border-radius: 10px;
+        }
+
+        .closeButton {
+            font-family: 'Ubuntu';
+            color: $red;
+            cursor: pointer;
+            outline: none;
+            border: none;
+            background: $gray;
+            border-radius: 10px;
+            padding: 10px;
+            :hover{
+                color: $red;
+            }
+        }
+    }
+      
+}

@@ -32,3 +32,19 @@ class AlreadyLikedException(HTTPException):
     def __post_init__(self) -> None:
         detail = "You have already liked this photo."
         super().__init__(status_code=403, detail=detail)
+
+
+@dataclass
+class UserExistsException(HTTPException):
+    username: str
+
+    def __post_init__(self) -> None:
+        detail = f"User with username '{self.username}' already exists"
+        super().__init__(status_code=409, detail=detail)
+
+
+@dataclass
+class UserNotFoundException(HTTPException):
+    def __post_init__(self) -> None:
+        detail = f"User not found"
+        super().__init__(status_code=404, detail=detail)

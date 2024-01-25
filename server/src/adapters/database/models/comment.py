@@ -4,8 +4,8 @@ from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
-from adapters.database.sa_session import Base
-from adapters.database.settings import settings
+from src.adapters.database.models import Base
+from src.adapters.database.settings import settings
 
 
 class Comment(Base):

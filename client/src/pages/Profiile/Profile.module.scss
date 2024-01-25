@@ -1,0 +1,12 @@
+.photoGrid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 19px;
+    margin-top: 50px;
+}
+
+
+input, label {
+    margin-left: 18px;
+}

@@ -3,11 +3,11 @@ from typing import Sequence
 
 from sqlalchemy import Row
 
-from adapters.database.models.photo import Photo
-from adapters.database.models.comment import Comment
-from adapters.database.models.like import Like
+from src.adapters.database.models.photo import Photo
+from src.adapters.database.models.comment import Comment
+from src.adapters.database.models.like import Like
 
-from application.photo.entities import PhotoDTO, CommentDTO
+from src.application.photo.entities import PhotoDTO, CommentDTO
 
 
 class IPhotoRepository(ABC):
@@ -22,6 +22,14 @@ class IPhotoRepository(ABC):
 
     @abstractmethod
     async def get_all_photos(self) -> Sequence[Row]:
+        pass
+
+    @abstractmethod
+    async def get_my_photos(self, user_id: int) -> Sequence[Row]:
+        pass
+
+    @abstractmethod
+    async def search_photos(self, search_term: str) -> Sequence[Row]:
         pass
 
     @abstractmethod

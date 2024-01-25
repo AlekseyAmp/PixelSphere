@@ -10,16 +10,17 @@ from sqlalchemy import (
     select,
     insert,
     delete,
+    or_
 )
 
-from adapters.database.repositories.base_repository import SABaseRepository
-from adapters.database.models.user import User
-from adapters.database.models.photo import Photo
-from adapters.database.models.comment import Comment
-from adapters.database.models.like import Like
+from src.adapters.database.repositories.base_repository import SABaseRepository
+from src.adapters.database.models.user import User
+from src.adapters.database.models.photo import Photo
+from src.adapters.database.models.comment import Comment
+from src.adapters.database.models.like import Like
 
-from application.photo.entities import PhotoDTO, CommentDTO
-from application.photo.interfaces import (
+from src.application.photo.entities import PhotoDTO, CommentDTO
+from src.application.photo.interfaces import (
     IPhotoRepository,
     IPhotoCommentRepository,
     IPhotoLikeRepository,
@@ -83,6 +84,48 @@ class PhotoRepository(SABaseRepository, IPhotoRepository):
                 Photo.user_id == User.id
             )
         )
+        photos = self.session.execute(query).fetchall()
+        return photos
+    
+    async def get_my_photos(self, user_id: int) -> Sequence[Row]:
+        query: Select = (
+            select(
+                Photo.id,
+                Photo.title,
+                Photo.description,
+                Photo.image,
+                Photo.created_at,
+                User.username
+            )
+            .join(
+                User,
+                Photo.user_id == User.id
+            ).filter(
+                Photo.user_id == user_id             
+            )
+        )
+        photos = self.session.execute(query).fetchall()
+        return photos
+
+    async def search_photos(self, search_term: str) -> Sequence[Row]:
+        query: Select = (
+            select(
+                Photo.id,
+                Photo.title,
+                Photo.description,
+                Photo.image,
+                Photo.created_at,
+                User.username
+            )
+            .join(
+                User,
+                Photo.user_id == User.id
+            ).filter(or_(
+                Photo.title.ilike(f"%{search_term}%"),
+                Photo.description.ilike(f"%{search_term}%")
+            ))
+        )
+
         photos = self.session.execute(query).fetchall()
         return photos
 

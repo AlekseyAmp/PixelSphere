@@ -1,0 +1,29 @@
+version: '3.7'
+services:
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: PixelSphere
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    container_name: pixelsphere-db
+    
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - client
+    container_name: pixelsphere-server
+
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    ports:
+      - "3000:3000"
+    container_name: pixelsphere-client

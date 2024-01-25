@@ -3,24 +3,24 @@ from dataclasses import dataclass
 
 from fastapi import HTTPException
 
-from application.photo.entities import PhotoDTO, CommentDTO
-from application.photo.interfaces import (
+from src.application.photo.entities import PhotoDTO, CommentDTO
+from src.application.photo.interfaces import (
     IPhotoRepository,
     IPhotoCommentRepository,
     IPhotoLikeRepository,
 )
-from application.photo.exceptions import (
+from src.application.exceptions import (
     InvalidFormatException,
     CannotRemovePhotoException,
     AlreadyLikedException,
 )
-from application.helpers import (
+from src.application.helpers import (
     validate_non_empty_fields,
     check_file_format,
 )
-from application.constants import ALLOWED_IMAGE_FORMATS
+from src.application.constants import ALLOWED_IMAGE_FORMATS
 
-from adapters.api.photo.schemas import(
+from src.adapters.api.photo.schemas import(
     AddLikeResponse,
     UploadPhotoResponse,
     PhotoResponse,
@@ -40,6 +40,7 @@ class PhotoService:
         photo: PhotoDTO,
         user_id: int
     ) -> UploadPhotoResponse:
+        validate_non_empty_fields(dict(photo))
         if not check_file_format(photo.image):
             raise InvalidFormatException(
                 ALLOWED_IMAGE_FORMATS
@@ -106,7 +107,57 @@ class PhotoService:
                     "likes": likes["total_likes"],
                     "author": photo.username
                 })
-        return photos_list
+        return photos_list[::-1]
+    
+    async def get_my_photos(self, user_id: int) -> list[PhotoResponse]:
+        photos = await self.photo_repo.get_my_photos(user_id)
+
+        photos_list = []
+        for photo in photos:
+            if photo:
+                image_base64 = base64.b64encode(
+                    photo.image
+                ).decode('utf-8')
+                comments = await self.get_comments_for_photo(
+                    photo.id
+                )
+                likes = await self.get_likes_for_photo(photo.id)
+                photos_list.append({
+                    "id": photo.id,
+                    "title": photo.title,
+                    "description": photo.description,
+                    "image": image_base64,
+                    "created_at": photo.created_at,
+                    "comments": comments,
+                    "likes": likes["total_likes"],
+                    "author": photo.username
+                })
+        return photos_list[::-1]
+    
+    async def search_photos(self, search_term: str) -> list[PhotoResponse]:
+        photos = await self.photo_repo.search_photos(search_term)
+
+        photos_list = []
+        for photo in photos:
+            if photo:
+                image_base64 = base64.b64encode(
+                    photo.image
+                ).decode('utf-8')
+                comments = await self.get_comments_for_photo(
+                    photo.id
+                )
+                likes = await self.get_likes_for_photo(photo.id)
+                photos_list.append({
+                    "id": photo.id,
+                    "title": photo.title,
+                    "description": photo.description,
+                    "image": image_base64,
+                    "created_at": photo.created_at,
+                    "comments": comments,
+                    "likes": likes["total_likes"],
+                    "author": photo.username
+                })
+        return photos_list[::-1]
 
     async def download_photo(self, photo_id: int) -> bytes:
         photo_data = await self.photo_repo.get_photo_by_id(

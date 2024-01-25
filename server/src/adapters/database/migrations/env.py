@@ -1,21 +1,11 @@
-import sys
-import os
-
 from logging.config import fileConfig
 
-from sqlalchemy import MetaData, engine_from_config
+from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
 
-sys.path.insert(0, os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
-
-from models import (
-    user,
-    photo,
-    comment,
-    like,
-)
+from models import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -32,20 +22,9 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
     
-def combine_metadata(*args):
-    m = MetaData()
-    for metadata in args:
-        for t in metadata.tables.values():
-            if t.name not in m.tables:
-                t.tometadata(m)
-    return m
-
-target_metadata = combine_metadata(
-    user.Base.metadata,
-    photo.Base.metadata,
-    comment.Base.metadata,
-    like.Base.metadata
-)
+config = context.config
+fileConfig(config.config_file_name)
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

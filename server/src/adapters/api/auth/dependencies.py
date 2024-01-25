@@ -1,12 +1,12 @@
 from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
-from adapters.database.sa_session import get_session
-from adapters.database.repositories.user_repository import (
+from src.adapters.database.sa_session import get_session
+from src.adapters.database.repositories.user_repository import (
     UserRepository
 )
 
-from application.auth.services import AuthService
+from src.application.auth.services import AuthService
 
 
 def get_user_repo(session: Session = Depends(get_session)) -> UserRepository:
